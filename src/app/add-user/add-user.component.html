@@ -1,0 +1,32 @@
+<div class="col-md-6">
+  <h2 class="text-center">Add User</h2>
+  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="name">First Name:</label>
+      <input formControlName="name" placeholder="First Name" name="name" class="form-control" id="name">
+      <div class="feedback-red" *ngIf="isInvalid('name')">
+        First Name is empty.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="nickName">Nick Name:</label>
+      <input formControlName="nickName" placeholder="Nick Name" name="nickName" class="form-control" id="nickName">
+      <div class="feedback-red" *ngIf="isInvalid('nickName')">
+        Nick Name is empty.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="age">age:</label>
+      <input formControlName="age" placeholder="age" name="age" class="form-control" id="age">
+      <div class="feedback-red" *ngIf="isInvalid('age')">
+        age is not valid.
+      </div>
+    </div>
+    <input id="checkbox" type="checkbox" formControlName="employee" name="sendemail" id="employee">
+    <button button [disabled]="addForm.invalid" class="btn btn-success">Submit</button>
+    <button class="btn btn-danger ml-2 " (click)="onCancel()">Cancel</button>
+  </form>
+</div>

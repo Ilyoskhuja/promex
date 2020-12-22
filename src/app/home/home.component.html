@@ -1,2 +1,47 @@
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 mt-5 box">
+          
+        <tree-root [nodes]="tree" [options]="options"  (activate)="onClickTree($event)"></tree-root>
+      </div>
+      <div class="col-md-9 mt-5 box">
+        <div class="container" *ngIf="showUsers">
+          <div class="row">
 
-<tree-root [nodes]="tree" [options]="options"></tree-root>
+            <div class="col"><button [routerLink]="['/add']" class="btn btn-success ml-2 mb-4">New</button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <table>
+                <tr>
+                  <th>Id</th>
+                  <th>Name(job title)</th>
+                  <th>Age</th>
+                  <th>NickName</th>
+                  <th>Employee</th>
+                  <th>Edit</th>
+                  <th>Delete</th>
+                </tr>
+                <tr *ngFor="let user of users">
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.age }}</td>
+                  <td>{{ user.nickName }}</td>
+                  <td>{{ user.employee }}</td>
+                  <td>
+                    <button class=" btn btn-primary " (click)="editUserContact(user) ">Edit</button>
+                  </td>
+                  <td>
+                    <button class="btn btn-danger ml-2 " (click)="deleteUserContact(user) ">Delete</button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>

@@ -1,11 +1,14 @@
 <h1 mat-dialog-title>введите логин и пароль</h1>
-<div mat-dialog-content>
+<div mat-dialog-content >
   <mat-form-field>
     <input matInput [(ngModel)]="data.name" placeholder="логин">
 
-    <input matInput [(ngModel)]="data.password" placeholder="пароль">
+  </mat-form-field>
+  <mat-form-field>
+
+    <input matInput [(ngModel)]="data.password" placeholder="пароль" >
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.password" cdkFocusInitial>Ok</button>
+  <button mat-button (click)="signIn()" cdkFocusInitial>Login</button>
 </div>

@@ -1,19 +1,48 @@
 import { importType } from '@angular/compiler/src/output/output_ast';
-import { Component, OnInit } from '@angular/core';
-import data  from '../../../src/assets/data.json';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import data from '../../../src/assets/data.json';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { User } from '../share/user.model';
+import { UserService } from '../user.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
-  mappedArr:  any[][] = [];
+export class HomeComponent implements OnInit, AfterViewInit {
+  mappedArr: any[][] = [];
   tree: any[] = [];
   options = {};
- arrElem = '';
-  mappedElem= [];
-  categoryhelper= [{}];
-  constructor() { }
+  arrElem = '';
+  mappedElem = [];
+  categoryhelper = [{}];
+  users: User[];
+  user: User;
+  showUsers: boolean = false;
+  constructor(private ucs: UserService, private router: Router) { }
+  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+  editUserContact(usercontact: User) {
+    console.log(usercontact);
+    this.router.navigate(["/edit/" + usercontact.id]);
+    // this.ucs.update(usercontact);
+  }
+  public onClickTree(event:any) {
+    if (event.node.data.id == 4)
+      this.showUsers = true;
+  }
+  deleteUserContact(usercontact: User) {
+    console.log(usercontact);
+    this.ucs.delete(usercontact);
+  }
 
   ngOnInit(): void {
     data.map(item => {
@@ -25,39 +54,12 @@ export class HomeComponent implements OnInit {
       });
     });
     this.unflatten(this.categoryhelper);
+
+    this.users = this.ucs.getall();
   }
-  unflatten(arr:any) {
+  unflatten(arr: any) {
     let treeChild = [];
-    // First map the nodes of the array to an object -> create a hash table.
-    // for (var i = 0, len = arr.length; i < len; i++) {
-    // //  arrElem = arr[i];
-    //   console.log(arr[i]);
-    //   this.mappedArr[arr[i].id] = arr[i];
-    //   console.log(this.mappedArr[arr[i].id]);
-    // }
-    // console.log("mappedArr:",this.mappedArr);
     
-    // for (var id in this.mappedArr) {
-    //   if (this.mappedArr.hasOwnProperty(id)) {
-    //     this.mappedElem = this.mappedArr[id];
-    //     console.log("mappedArr:", this.mappedArr[id])
-    //     console.log("-----mappedElem:", this.mappedElem.parentId)
-    //     // If the element is not at the root level, add it to its parent array of children.
-    //     if (this.mappedElem.parentId) {
-
-    //       console.log("++++mappedElem:", this.mappedElem.parentId)
-    //       console.log("this.mappedArr:9999", this.mappedArr)
-    //       console.log("this.mappedElem[");
-          
-
-    //       this.mappedArr[this.mappedElem['parentId']]['children'].push(this.mappedElem);
-    //     }
-    //     // If the element is at the root level, add it to first level elements array.
-    //     else {
-    //       this.tree.push(this.mappedElem);
-    //     }
-    //   }
-    // }
     for (var i = 0, len = arr.length; i < len; i++) {
       if (arr[i].parentId == 0) {
         arr[i]['children'] = []
@@ -69,7 +71,7 @@ export class HomeComponent implements OnInit {
     }
     let clone = treeChild;
     for (let p = 0; p < treeChild.length; p++) {
-      for (let j = 0; j < clone.length; j++) { 
+      for (let j = 0; j < clone.length; j++) {
         // console.log("treeChild[p]['id']",treeChild[p]['id']);
 
         // console.log("clone[j]['parentId']", clone[j]['parentId']);
@@ -92,3 +94,33 @@ export class HomeComponent implements OnInit {
     return this.tree;
   }
 }
+
+export interface PeriodicElement {
+  name: string;
+  position: number;
+  weight: number;
+  symbol: string;
+}
+
+const ELEMENT_DATA: PeriodicElement[] = [
+  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
+  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
+  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
+  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
+  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
+  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
+  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
+  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
+  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
+  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
+  { position: 11, name: 'Sodium', weight: 22.9897, symbol: 'Na' },
+  { position: 12, name: 'Magnesium', weight: 24.305, symbol: 'Mg' },
+  { position: 13, name: 'Aluminum', weight: 26.9815, symbol: 'Al' },
+  { position: 14, name: 'Silicon', weight: 28.0855, symbol: 'Si' },
+  { position: 15, name: 'Phosphorus', weight: 30.9738, symbol: 'P' },
+  { position: 16, name: 'Sulfur', weight: 32.065, symbol: 'S' },
+  { position: 17, name: 'Chlorine', weight: 35.453, symbol: 'Cl' },
+  { position: 18, name: 'Argon', weight: 39.948, symbol: 'Ar' },
+  { position: 19, name: 'Potassium', weight: 39.0983, symbol: 'K' },
+  { position: 20, name: 'Calcium', weight: 40.078, symbol: 'Ca' },
+];
